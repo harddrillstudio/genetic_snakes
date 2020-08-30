@@ -1,3 +1,5 @@
+import { random } from "lodash"
+
 const distance = (x1: number, x2: number, y1: number, y2: number) => {
   const dist = Math.sqrt((x1 - y1) ** 2 + (x2 - y2) ** 2)
   return dist
@@ -7,8 +9,8 @@ class Individual {
   genes: Array<number>
   phenotype: Array<any>
   fitness: number
-  segment_cnt: number
-  segment_length: number
+  segmentCnt: number
+  segmentLength: number
   globals: any
   lastX: number
   lastY: number
@@ -17,8 +19,8 @@ class Individual {
     this.genes = []
     this.phenotype = []
     this.fitness = 0
-    this.segment_cnt = 20
-    this.segment_length = 20
+    this.segmentCnt = 10
+    this.segmentLength = 30
     this.globals = globals
 
     this.generateGenes()
@@ -26,30 +28,29 @@ class Individual {
     this.getFitness()
   }
 
-
   generateGenes() {
-    for (var i = 0; i < this.segment_cnt; i++) {
+    for (var i = 0; i < this.segmentCnt; i++) {
       this.genes.push(Math.random() * Math.PI * 3)
     }
   }
 
-
   getPhenotype() {
+    this.phenotype = []
     let x = this.globals.origin.x,
       y = this.globals.origin.y
 
     let dx, dy
-    for (var i = 0; i < this.segment_cnt - 1; i++) {
-      dx = Math.cos(this.genes[i]) * this.segment_length
-      dy = Math.sin(this.genes[i]) * this.segment_length
+    for (var i = 0; i < this.segmentCnt - 1; i++) {
+      dx = Math.cos(this.genes[i]) * this.segmentLength
+      dy = Math.sin(this.genes[i]) * this.segmentLength
 
       x += dx
       y += dy
 
       this.phenotype.push({ x: x, y: y })
     }
-    dx = Math.cos(this.genes[i]) * this.segment_length
-    dy = Math.sin(this.genes[i]) * this.segment_length
+    dx = Math.cos(this.genes[i]) * this.segmentLength
+    dy = Math.sin(this.genes[i]) * this.segmentLength
 
     x += dx
     y += dy
@@ -57,10 +58,12 @@ class Individual {
     this.phenotype.push({ x: x, y: y })
     this.lastX = x
     this.lastY = y
+
+    return this.phenotype
   }
 
-
   getFitness() {
+    this.getPhenotype()
     this.fitness = distance(
       this.lastX,
       this.lastY,
@@ -70,17 +73,25 @@ class Individual {
     return this.fitness
   }
 
-
-  mutate() {}
-
+  mutate() {
+    for (var i = 0; i < this.segmentCnt; i++) {
+      if (Math.random() <= this.globals.mutationRate) {
+        this.genes[i] += random(
+          -3.14 / this.globals.mutationStrength,
+          3.14 / this.globals.mutationStrength,
+          true
+        )
+      }
+    }
+  }
 
   print() {
     console.log("[Genotype]")
-    for (var i = 0; i < this.segment_cnt; i++) {
+    for (var i = 0; i < this.segmentCnt; i++) {
       console.log(this.genes[i])
     }
     console.log("[Phenotype]")
-    for (var i = 0; i < this.segment_cnt; i++) {
+    for (var i = 0; i < this.segmentCnt; i++) {
       console.log(this.phenotype[i])
     }
     console.log("lastX: " + this.lastX)

@@ -1,10 +1,21 @@
 import Population from "./Population"
+import Individual from "./Individual"
 
-var cv: any = document.getElementById("canvas")
-var ctx: CanvasRenderingContext2D = cv.getContext("2d")
-console.log(ctx)
-ctx.canvas.width = window.innerWidth
-ctx.canvas.height = window.innerHeight
+// DRAW SNAKE
+function drawIndividual(ctx: CanvasRenderingContext2D, individual: Individual) {
+  let x = globals.origin.x,
+    y = globals.origin.y
+
+  ctx.beginPath()
+  ctx.moveTo(x, y)
+
+  const points = individual.phenotype
+  for (var i = 0; i < individual.segment_cnt; i++) {
+    ctx.lineTo(points[i].x, points[i].y)
+  }
+  // ctx.closePath()
+  ctx.stroke()
+}
 
 let globals = {
   origin: {
@@ -17,6 +28,25 @@ let globals = {
   },
 }
 
+// Generate population
+let population = new Population(globals)
+population.print()
+
+function evolution() {
+  // for every Individual
+  // - select parents
+  // - breed them
+  // - mutate them
+}
+
+// ========= Render
+
+let cv: any = document.getElementById("canvas")
+let ctx: CanvasRenderingContext2D = cv.getContext("2d")
+// console.log(ctx)
+ctx.canvas.width = window.innerWidth
+ctx.canvas.height = window.innerHeight
+
 ctx.strokeStyle = "#FF0000"
 ctx.lineWidth = 2
 
@@ -24,36 +54,10 @@ ctx.lineWidth = 2
 
 // origin
 ctx.strokeRect(globals.origin.x - 5, globals.origin.y - 5, 10, 10)
-
+// target
 ctx.strokeRect(globals.target.x - 5, globals.target.y - 5, 10, 10)
 
-// Generate population
-let population = new Population(globals)
-population.print()
-
-population.individuals[0].print()
-
-// DRAW SNAKE
-let x = globals.origin.x,
-  y = globals.origin.y
-
-ctx.beginPath()
-ctx.moveTo(x, y)
-
-for (var i = 0; i < population.individuals[0].segment_cnt; i++) {
-  let dx =
-    Math.cos(population.individuals[0].genes[i]) *
-    population.individuals[0].segment_length
-  let dy =
-    Math.sin(population.individuals[0].genes[i]) *
-    population.individuals[0].segment_length
-
-  x += dx
-  y += dy
-
-  let nextX = population.individuals[0].genes[i] * 100
-  let nextY = population.individuals[0].genes[i] * 50 * Math.random()
-  ctx.lineTo(x, y)
+// population
+for (let i = 0; i < population.size; i++) {
+  drawIndividual(ctx, population.individuals[i])
 }
-// ctx.closePath()
-ctx.stroke()

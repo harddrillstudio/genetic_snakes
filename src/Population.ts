@@ -6,10 +6,13 @@ class Population {
   globals: object
 
   constructor(globals: object) {
-    this.individuals = [new Individual(globals)]
+    this.individuals = []
     this.size = 20
     this.globals = globals
 
+    for (let i = 0; i < this.size; i++) {
+      this.individuals.push(new Individual(globals))
+    }
   }
 
   print() {

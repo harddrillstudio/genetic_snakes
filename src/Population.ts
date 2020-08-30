@@ -1,19 +1,17 @@
 import Individual from "./Individual"
 import { sampleSize, minBy } from "lodash"
+import Config from "./Config"
 
 class Population {
   individuals: any
   size: number
-  globals: any
 
-  constructor(globals: any) {
-    this.globals = globals
+  constructor() {
     this.individuals = []
-    this.size = globals.populationSize
-    console.log(globals)
+    this.size = Config.globals.populationSize
 
     for (let i = 0; i < this.size; i++) {
-      this.individuals.push(new Individual(globals))
+      this.individuals.push(new Individual())
     }
   }
 
@@ -40,7 +38,7 @@ class Population {
   tournamentSelect() {
     let players = sampleSize(
       this.individuals,
-      this.globals.tournamentSelectSize
+      Config.globals.tournamentSelectSize
     )
 
     let bestPlayer = minBy(players, function (indiv: Individual) {
@@ -50,7 +48,7 @@ class Population {
   }
 
   crossover(parent1: Individual, parent2: Individual) {
-    let child = new Individual(this.globals)
+    let child = new Individual()
     for (let i = 0; i < parent1.segmentCnt; i++) {
       child.genes[i] = (parent1.genes[i] + parent2.genes[i]) / 2
     }

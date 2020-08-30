@@ -1,4 +1,5 @@
 import { random } from "lodash"
+import Config from "./Config"
 
 const distance = (x1: number, x2: number, y1: number, y2: number) => {
   const dist = Math.sqrt((x1 - y1) ** 2 + (x2 - y2) ** 2)
@@ -11,17 +12,15 @@ class Individual {
   fitness: number
   segmentCnt: number
   segmentLength: number
-  globals: any
   lastX: number
   lastY: number
 
-  constructor(globals: object) {
+  constructor() {
     this.genes = []
     this.phenotype = []
     this.fitness = 0
     this.segmentCnt = 10
     this.segmentLength = 30
-    this.globals = globals
 
     this.generateGenes()
     this.getPhenotype()
@@ -36,8 +35,8 @@ class Individual {
 
   getPhenotype() {
     this.phenotype = []
-    let x = this.globals.origin.x,
-      y = this.globals.origin.y
+    let x = Config.globals.origin.x,
+      y = Config.globals.origin.y
 
     let dx, dy
     for (var i = 0; i < this.segmentCnt - 1; i++) {
@@ -67,18 +66,18 @@ class Individual {
     this.fitness = distance(
       this.lastX,
       this.lastY,
-      this.globals.target.x,
-      this.globals.target.y
+      Config.globals.target.x,
+      Config.globals.target.y
     )
     return this.fitness
   }
 
   mutate() {
     for (var i = 0; i < this.segmentCnt; i++) {
-      if (Math.random() <= this.globals.mutationRate) {
+      if (Math.random() <= Config.globals.mutationRate) {
         this.genes[i] += random(
-          -3.14 / this.globals.mutationStrength,
-          3.14 / this.globals.mutationStrength,
+          -3.14 / Config.globals.mutationStrength,
+          3.14 / Config.globals.mutationStrength,
           true
         )
       }

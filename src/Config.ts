@@ -1,5 +1,6 @@
 class Config {
   public static globals = {
+    fps: 30,
     origin: {
       x: 100,
       y: 100,
@@ -9,7 +10,7 @@ class Config {
       y: 200,
     },
     mutationRate: 0.1,
-    mutationStrength: 50,
+    mutationStrength: 10,
     populationSize: 20,
     tournamentSelectSize: 5,
   }

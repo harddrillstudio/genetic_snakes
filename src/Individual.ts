@@ -19,8 +19,8 @@ class Individual {
     this.genes = []
     this.phenotype = []
     this.fitness = 0
-    this.segmentCnt = 10
-    this.segmentLength = 30
+    this.segmentCnt = 20
+    this.segmentLength = 20
 
     this.generateGenes()
     this.getPhenotype()

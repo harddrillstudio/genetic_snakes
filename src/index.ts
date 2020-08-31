@@ -5,6 +5,7 @@ import { drawIndividual } from "./RenderUtils"
 
 // Generate population
 let population: any = new Population()
+let isRunning = true
 
 function evolution() {
   for (let i = 0; i < population.size; i++) {
@@ -23,9 +24,6 @@ function evolution() {
 
 // ========= Render
 function render() {
-  let fpsLabel: any = document.getElementById("fps-label")
-  fpsLabel.innerText = "FPS: " + Config.globals.fps
-
   let cv: any = document.getElementById("canvas")
   let ctx: CanvasRenderingContext2D = cv.getContext("2d")
 
@@ -72,14 +70,38 @@ cv.addEventListener("mousemove", (e: any) => {
   }
 })
 
+function DOMHelper() {
+  // FPS
+  // let fpsInput: any = document.getElementById("fps")
+  // Config.globals.fps = fpsInput.value
+
+  // let fpsLabel: any = document.getElementById("fps-label")
+  // fpsLabel.innerText = "FPS: " + Config.globals.fps
+
+  // mutationRate
+  let mutationRateInput: any = document.getElementById("mutationRate")
+  Config.globals.mutationRate = mutationRateInput.value
+
+  let mutationRateLabel: any = document.getElementById("mutationRate-label")
+  mutationRateLabel.innerText =
+    "Mutation Rate: " + Config.globals.mutationRate * 100 + "%"
+
+  // mutationStrength
+  let mutationStrengthInput: any = document.getElementById("mutationStrength")
+  Config.globals.mutationStrength = mutationStrengthInput.value
+
+  let mutationStrengthLabel: any = document.getElementById(
+    "mutationStrength-label"
+  )
+  mutationStrengthLabel.innerText =
+    "Mutation Inhibitor: " + Config.globals.mutationStrength
+}
+
 function loop() {
-  let rangeInput: any = document.getElementById("fps")
-  Config.globals.fps = rangeInput.value
+  DOMHelper()
   evolution()
   render()
 
-  setTimeout(() => {
-    requestAnimationFrame(loop)
-  }, 1000 / Config.globals.fps)
+  requestAnimationFrame(loop)
 }
 loop()

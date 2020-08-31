@@ -1,6 +1,5 @@
 class Config {
   public static globals = {
-    fps: 30,
     origin: {
       x: 100,
       y: 100,
